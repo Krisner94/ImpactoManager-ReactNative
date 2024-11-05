@@ -1,19 +1,21 @@
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import Home from "./src/components/Home/";
+import Home from "./src/components/Home";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator, DrawerNavigationProp } from "@react-navigation/drawer";
 import Aluno from "./src/components/Aluno";
 import Professor from "./src/components/Professor";
 import Turma from "./src/components/Turma";
+import SideBar from "./src/components/SideBar";
+import { IconButton } from 'react-native-paper';
 
-export type RootStackParamList = {
+type DrawerParamList = {
   Home: undefined;
   Aluno: undefined;
   Professor: undefined;
   Turma: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const light = {
   ...DefaultTheme,
@@ -32,23 +34,38 @@ export default function App() {
   return (
     <PaperProvider theme={light}>
       <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{
+        <Drawer.Navigator 
+          initialRouteName="Home" 
+          drawerContent={(props) => <SideBar {...props} />}
+          screenOptions={({ navigation }) => ({
+            headerLeft: () => (
+              <IconButton
+                icon="menu"
+                iconColor="white"
+                size={20}
+                onPress={() => navigation.openDrawer()}
+              />
+            ),
             headerStyle: {
-              backgroundColor: '#e96a20', 
+              backgroundColor: '#e96a20',
             },
-            headerTintColor: '#fff', 
+            headerTintColor: '#fff',
             headerTitleStyle: {
-              fontWeight: 'bold', 
+              fontWeight: 'bold',
             },
-          }}
+          })}
         >
-          <Stack.Screen name="Home" component={Home} options={{ title: "Impacto Manager" }} />
-          <Stack.Screen name="Aluno" component={Aluno} />
-          <Stack.Screen name="Professor" component={Professor} />
-          <Stack.Screen name="Turma" component={Turma} />
-        </Stack.Navigator>
+          <Drawer.Screen 
+            name="Home" 
+            component={Aluno}
+            options={{
+              title: "Impacto Manager"
+            }}
+          />
+          <Drawer.Screen name="Aluno" component={Aluno} />
+          <Drawer.Screen name="Professor" component={Professor} />
+          <Drawer.Screen name="Turma" component={Turma} />
+        </Drawer.Navigator>
       </NavigationContainer>
     </PaperProvider>
   );

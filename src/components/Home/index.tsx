@@ -1,29 +1,48 @@
 import React from 'react';
-import {Button, useTheme} from 'react-native-paper';
-import {Appearance, StyleSheet, Text, View} from 'react-native';
-import SegmentedComponent from '../SegmentedComponent';
-import Aluno from '../Aluno';
+import { useTheme, IconButton } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
+type NavigationProp = DrawerNavigationProp<any>;
 
+export default function Home() {
+  const { colors } = useTheme();
+  const navigation = useNavigation<NavigationProp>();
 
-interface HomeProps {
-}
+  const openDrawer = () => {
+    navigation.openDrawer();
+  };
 
-export default function Home({}: HomeProps) {
-  const {colors} = useTheme()
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background}}>
-      <Aluno/>
-      <SegmentedComponent />
-      
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.header}>
+        <IconButton
+          icon="menu"
+          iconColor="white"
+          size={20}
+          onPress={openDrawer}
+        />
+      </View>
+      <View style={styles.content}>
+      </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  content: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }
 });

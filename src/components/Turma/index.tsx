@@ -1,9 +1,12 @@
 import React from 'react';
+import { Text } from 'react-native-paper';
 
 interface TurmaProps { }
 
 function Turma({ }: TurmaProps) {
-  return <div>Turma</div>;
+  return(
+    <Text>Turma</Text>
+  )
 }
 
 export default Turma;

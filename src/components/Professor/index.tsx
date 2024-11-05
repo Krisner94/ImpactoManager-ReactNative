@@ -1,9 +1,11 @@
 import React from 'react';
+import { Text } from 'react-native-paper';
 
 interface ProfessorProps { }
 
 function Professor({ }: ProfessorProps) {
-  return <div>Professor</div>;
+  return(
+    <Text>Professor</Text>
+  )
 }
-
 export default Professor;
