@@ -42,7 +42,7 @@ export default function App() {
               <IconButton
                 icon="menu"
                 iconColor="white"
-                size={20}
+                size={30}
                 onPress={() => navigation.openDrawer()}
               />
             ),
