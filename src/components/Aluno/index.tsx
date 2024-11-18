@@ -21,8 +21,12 @@ const DATA = [
 ];
 
 const Aluno = () => {
+  const handeCardPress = (item: CardItem) => {
+    console.log("Card pressionado")    
+  } 
+
   const renderItem = ({ item }: { item: CardItem }) => (
-    <CardComponent item={item} />
+    <CardComponent item={item} onPress={() => handeCardPress(item)} />
   );
 
   return (
