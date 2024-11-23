@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View, StyleSheet } from 'react-native';
 import { Card, Text, IconButton } from 'react-native-paper';
 import styled from 'styled-components/native';
 
@@ -8,8 +8,9 @@ interface CardComponentProps {
     id: string;
     title: string;
   };
-  onPress: () => void;
-  onLongPress: () => void;
+  onPress?: () => void;
+  onLongPress?: () => void;
+  onDeletePress?: () => void;
   delayLongPress?: number;
 }
 
@@ -38,52 +39,61 @@ const TitleText = styled(Text)`
   flex: 1;
 `;
 
-const CardComponent = ({ 
-  item, 
-  onPress, 
-  onLongPress, 
-  delayLongPress 
+
+const CardComponent = ({
+  item,
+  onPress,
+  onLongPress,
+  onDeletePress,
+  delayLongPress,
 }: CardComponentProps) => {
   return (
-    <Pressable
-      onPress={() => {}}
-      onLongPress={onLongPress}
-      delayLongPress={delayLongPress}
-      style={({ pressed }) => [
-        {
-          opacity: pressed ? 0.7 : 1,
-        },
-      ]}
-    >
-      <CardContainer>
-        <CardContentContainer>
-          <ContentWrapper>
+    <View style={styles.container}>
+      <Pressable
+        onLongPress={onLongPress}
+        delayLongPress={delayLongPress}
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? 0.7 : 1,
+          },
+        ]}
+      >
+        <CardContainer>
+          <CardContentContainer>
+            <ContentWrapper>
+              <IconButton
+                icon="account-circle"
+                size={40}
+                iconColor="#ff9100"
+              />
+              <TitleText>{item.title}</TitleText>
+            </ContentWrapper>
             <IconButton
-              icon="account-circle"
-              size={40}
+              icon="pencil"
+              size={20}
+              containerColor="#E8E8E8"
               iconColor="#ff9100"
+              onPress={onPress}
             />
-            <TitleText>{item.title}</TitleText>
-          </ContentWrapper>
-          <IconButton
-            icon="pencil"
-            size={20}
-            containerColor="#E8E8E8"
-            iconColor="#ff9100"
-            onPress={onPress} // Abre o modal no botão Edit
-          />
-          <IconButton
-            icon="delete"
-            size={20}
-            containerColor="#E8E8E8"
-            iconColor="#ff0000"
-            onPress={onPress} // Abre o modal no botão Edit
-          />
-        </CardContentContainer>
-        
-      </CardContainer>
-    </Pressable>
+            <IconButton
+              icon="delete"
+              size={20}
+              containerColor="#E8E8E8"
+              iconColor="#ff0000"
+              onPress={() => console.log("Deletado")}
+            />
+          </CardContentContainer>
+        </CardContainer>
+      </Pressable>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+});
 
 export default CardComponent;

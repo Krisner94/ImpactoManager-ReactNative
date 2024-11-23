@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FlatList, View, Vibration } from 'react-native'; // Importe Vibration
 import CardComponent from '../CardComponent';
 import ModalComponent from '../ModalComponent';
+import SnackBarComponent from '../SnackBarComponent';
 
 interface CardItem {
   id: string;
@@ -31,7 +32,11 @@ const DATA: CardItem[] = [
   { id: '20', title: 'Beatriz' }
 ];
 
-const Aluno = () => {
+interface AlunoProps {
+  onDeletePress: () => void;
+}
+
+const Aluno = ({ onDeletePress }: AlunoProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CardItem | null>(null);
 
@@ -52,10 +57,11 @@ const Aluno = () => {
 
   const renderItem = ({ item }: { item: CardItem }) => (
     <CardComponent 
-      item={item} 
+      item={item}
       onPress={() => openModal(item)} // Edit button
       onLongPress={() => handleLongPress(item)} // Long press
-      delayLongPress={500} // 500ms
+      delayLongPress={300} // 300ms
+      onDeletePress={() => console.log("Teste")} // Passa a função de exclusão
     />
   );
 
