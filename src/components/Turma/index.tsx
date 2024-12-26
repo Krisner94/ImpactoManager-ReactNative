@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native-paper';
 import CardComponent from '../CardComponent';
 import { FlatList, View } from 'react-native';
+import FabComponent from '../FAB/FAB';
 
 interface TurmaProps { }
 
@@ -28,6 +28,7 @@ function Turma({ }: TurmaProps) {
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
+      <FabComponent nomeDaTela='NovaTurma'/>
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import Home from "./src/components/Home";
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,12 +8,19 @@ import Professor from "./src/components/Professor";
 import Turma from "./src/components/Turma";
 import SideBar from "./src/components/SideBar";
 import { IconButton } from 'react-native-paper';
+import NovoAluno from "./src/components/Novo/NovoAluno";
+import NovoProfessor from './src/components/Novo/NovoProfessor';
+import NovoTurma from './src/components/Novo/NovoTurma';
+import NovaTurma from './src/components/Novo/NovaTurma';
 
 type DrawerParamList = {
-  Home: undefined;
-  Aluno: undefined;
-  Professor: undefined;
-  Turma: undefined;
+  Home: undefined
+  Aluno: undefined
+  Professor: undefined
+  Turma: undefined
+  NovoAluno: undefined
+  NovaTurma: undefined
+  NovoProfessor: undefined
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -65,6 +73,9 @@ export default function App() {
           <Drawer.Screen name="Aluno" component={Aluno} />
           <Drawer.Screen name="Professor" component={Professor} />
           <Drawer.Screen name="Turma" component={Turma} />
+          <Drawer.Screen name="NovoAluno" component={NovoAluno}/>
+          <Drawer.Screen name="NovoProfessor" component={NovoProfessor}/>
+          <Drawer.Screen name="NovaTurma" component={NovaTurma}/>
         </Drawer.Navigator>
       </NavigationContainer>
     </PaperProvider>

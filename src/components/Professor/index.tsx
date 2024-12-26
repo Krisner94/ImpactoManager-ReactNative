@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native-paper';
 import CardComponent from '../CardComponent';
 import { FlatList, View } from 'react-native';
+import FabComponent from '../FAB/FAB';
 
 interface CardItem {
   id: string;
@@ -35,6 +36,7 @@ function Professor({ }: ProfessorProps) {
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
+      <FabComponent nomeDaTela='NovoProfessor'/>
     </View>
   );
 }

@@ -3,6 +3,7 @@ import { useTheme, IconButton } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import FabComponent from "../FAB/FAB";
 
 type NavigationProp = DrawerNavigationProp<any>;
 
@@ -15,18 +16,19 @@ export default function Home() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <IconButton
-          icon="menu"
-          iconColor="white"
-          size={20}
-          onPress={openDrawer}
-        />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={styles.header}>
+          <IconButton
+              icon="menu"
+              iconColor="white"
+              size={20}
+              onPress={openDrawer}
+          />
+        </View>
+        <View style={styles.content}>
+        </View>
+        <FabComponent nomeDaTela='NovoAluno'/>
       </View>
-      <View style={styles.content}>
-      </View>
-    </View>
   );
 }
 
