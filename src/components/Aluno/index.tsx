@@ -6,7 +6,7 @@ import FabComponent from "../FAB/FAB";
 import { supabaseInstance } from '../../service/supabaseService';
 
 interface AlunoProps {
-  onDeletePress: (id: string) => void; // Passando o ID do aluno
+  onDeletePress: (id: string) => void;
 }
 
 interface Aluno {
@@ -64,7 +64,6 @@ const Aluno = ({ onDeletePress }: AlunoProps) => {
     if (error) {
       console.error('Erro ao deletar aluno:', error);
     } else {
-      // Atualiza a lista de alunos após a exclusão
       setAlunos((prevAlunos) => prevAlunos.filter((aluno) => aluno.id !== id));
     }
   };
@@ -74,7 +73,7 @@ const Aluno = ({ onDeletePress }: AlunoProps) => {
       item={item}
       onPress={() => handleCardPress(item)}
       onLongPress={() => {}}
-      onDeletePress={() => handleDelete(item.id)}  // Passa o ID para deletar o aluno
+      onDeletePress={() => handleDelete(item.id)}
     />
   );
 

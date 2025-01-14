@@ -8,7 +8,7 @@ interface ModalComponentProps {
   onDismiss: () => void;
   item?: {
     id: string;
-    title: string;
+    nome: string;
   };
 }
 
@@ -57,9 +57,9 @@ function ModalComponent({ visible, onDismiss, item }: ModalComponentProps) {
             onPress={onDismiss}
             style={{ alignSelf: 'flex-end' }}
           />
-          <TitleText>Detalhes do {item?.title}</TitleText>
+          <TitleText>Detalhes do aluno {item?.nome}</TitleText>
           <Text style={styles.description}>
-            Este modal contém informações detalhadas sobre {item?.title}. 
+            Este modal contém informações detalhadas sobre {item?.nome}. 
           </Text>
           <ButtonContainer>
             <Button
