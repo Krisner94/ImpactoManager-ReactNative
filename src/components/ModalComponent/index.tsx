@@ -13,7 +13,9 @@ interface ModalComponentProps {
     dataNascimento: string;
     cpf: string;
     responsavel01: string;
+    telefoneResponsavel01: string
     responsavel02: string;
+    telefoneResponsavel02: string
   };
   onEditPress: () => void;
 }
@@ -46,7 +48,7 @@ const ModalComponent = ({ visible, onDismiss, item, onEditPress }: ModalComponen
       <ModalContainer>
         <ModalCard>
           <IconButton icon="close" size={24} onPress={onDismiss} style={{ alignSelf: 'flex-end' }} />
-          <TitleText>Detalhes do aluno</TitleText>
+          <TitleText>{item.nome}</TitleText>
           {item && (
             <>
               <Text style={styles.detailText}>Nome: {item.nome}</Text>
@@ -54,7 +56,9 @@ const ModalComponent = ({ visible, onDismiss, item, onEditPress }: ModalComponen
               <Text style={styles.detailText}>Data de Nascimento: {item.dataNascimento}</Text>
               <Text style={styles.detailText}>CPF: {item.cpf}</Text>
               <Text style={styles.detailText}>Responsável 1: {item.responsavel01}</Text>
+              <Text style={styles.detailText}>Telefone do Responsável 01: {item.telefoneResponsavel01}</Text>
               <Text style={styles.detailText}>Responsável 2: {item.responsavel02}</Text>
+              <Text style={styles.detailText}>Telefone do Responsável 2: {item.telefoneResponsavel02}</Text>
             </>
           )}
           <View style={styles.buttonContainer}>

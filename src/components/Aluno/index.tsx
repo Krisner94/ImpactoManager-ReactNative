@@ -4,7 +4,14 @@ import CardComponent from '../CardComponent';
 import ModalComponent from '../ModalComponent';
 import FabComponent from "../FAB/FAB";
 import { supabaseInstance } from '../../service/supabaseService';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+
+type DrawerParamList = {
+  Home: undefined;
+  Aluno: undefined;
+  NovoAluno: undefined;
+  UpdateAluno: { aluno: Aluno };
+};
 
 interface Aluno {
   id: string;
@@ -29,7 +36,7 @@ const Aluno = () => {
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<DrawerParamList>>();
 
   useEffect(() => {
     const fetchAlunos = async () => {
@@ -55,13 +62,6 @@ const Aluno = () => {
     setSelectedAluno(null);
   };
 
-  const handleEditPress = () => {
-    if (selectedAluno) {
-      navigation.navigate('UpdateAluno', { aluno: selectedAluno });
-      setModalVisible(false);
-    }
-  };
-
   const handleDelete = async (id: string) => {
     try {
       const { error } = await supabaseInstance.delete(id);
@@ -69,6 +69,13 @@ const Aluno = () => {
       setAlunos((prevAlunos) => prevAlunos.filter((aluno) => aluno.id !== id));
     } catch (error) {
       console.error('Erro ao deletar aluno:', error);
+    }
+  };
+
+  const handleEditPress = () => {
+    if (selectedAluno) {
+      setModalVisible(false)
+      navigation.navigate('UpdateAluno', { aluno: selectedAluno });
     }
   };
 
@@ -83,7 +90,7 @@ const Aluno = () => {
   return (
     <View style={{ flex: 1 }}>
       {alunos.length === 0 ? (
-        <Text>Carregando lista de.</Text>
+        <Text>Carregando lista de alunos...</Text>
       ) : (
         <FlatList
           data={alunos}

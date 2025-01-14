@@ -1,45 +1,68 @@
-import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, StyleSheet, ScrollView, Button, Alert, Platform, TouchableOpacity } from "react-native"
-import { RouteProp, useRoute } from '@react-navigation/native'
-import { supabaseInstance } from "../../../service/supabaseService"
-import DateTimePicker from "@react-native-community/datetimepicker"
-import { Picker } from "@react-native-picker/picker"
-
-interface UpdateAlunoProps {}
+import React, { useState } from "react";
+import { View, Text, TextInput, StyleSheet, ScrollView, Button, Alert, Platform, TouchableOpacity } from "react-native";
+import { NavigationProp, RouteProp, useRoute } from "@react-navigation/native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+import { supabaseInstance } from "../../../service/supabaseService";
+import { useNavigation } from '@react-navigation/native';
 
 type RootStackParamList = {
   UpdateAluno: { aluno: any };
+  Aluno: undefined;
 };
 
-type UpdateAlunoRouteProp = RouteProp<RootStackParamList, 'UpdateAluno'>;
+type UpdateAlunoRouteProp = RouteProp<RootStackParamList, "UpdateAluno">;
 
-const UpdateAluno = ({ }: UpdateAlunoProps) => {
+const UpdateAluno = () => {
   const route = useRoute<UpdateAlunoRouteProp>();
   const { aluno } = route.params;
 
   const [formData, setFormData] = useState(aluno);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleInputChange = (name: string, value: string | Date) => {
+  const handleInputChange = (name: string, value: string | Date | null) => {
     setFormData({ ...formData, [name]: value });
   };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      setFormData({ ...formData, dataNascimento: selectedDate });
+      setFormData({ ...formData, dataNascimento: selectedDate.toISOString().split("T")[0] });
     }
   };
 
   const handleSubmit = async () => {
     try {
-      const { error } = await supabaseInstance.update(formData.id, formData);
+      const cleanedData = Object.keys(formData).reduce((acc, key) => {
+        if (formData[key] !== null && formData[key] !== undefined) {
+          acc[key] = formData[key];
+        }
+        return acc;
+      }, {});
+  
+      console.log('Dados a serem enviados:', cleanedData);
+  
+      const { error } = await supabaseInstance.update(formData.id, cleanedData);
+      
       if (error) {
-        throw error;
+        console.error('Erro detalhado:', error);
+        Alert.alert("Erro", error.message || "Falha ao atualizar dados.");
+        return;
       }
-      Alert.alert("Sucesso", "Dados atualizados com sucesso");
-    } catch (error) {
-      Alert.alert("Erro", "Falha ao atualizar dados.");
+  
+      Alert.alert("Sucesso", "Dados atualizados com sucesso", [
+        {
+          text: "OK",
+          onPress: () => navigation.reset({
+            index: 0,
+            routes: [{ name: "Alunos" }],
+          })
+        },
+      ]);
+    } catch (error: any) {
+      console.error('Erro completo:', error);
+      Alert.alert("Erro", error.message || "Falha ao atualizar dados.");
     }
   };
 
@@ -63,7 +86,6 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
           style={styles.input}
           placeholder="Digite o CPF"
           value={formData.cpf}
-          keyboardType="numeric"
           onChangeText={(text) => handleInputChange("cpf", text)}
         />
       </View>
@@ -72,10 +94,9 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
         <Text style={styles.label}>Sexo:</Text>
         <Picker
           selectedValue={formData.sexo}
-          onValueChange={(value: string) => handleInputChange("sexo", value)}
+          onValueChange={(value) => handleInputChange("sexo", value)}
           style={styles.picker}
         >
-          <Picker.Item label="Selecione" value="" />
           <Picker.Item label="Masculino" value="MASCULINO" />
           <Picker.Item label="Feminino" value="FEMININO" />
         </Picker>
@@ -84,16 +105,13 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Data de Nascimento:</Text>
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-          <TextInput
-            style={styles.input}
-            value={formData.dataNascimento.toLocaleDateString()}
-            editable={false}
-            pointerEvents="none"
-          />
+          <Text style={styles.input}>
+            {formData.dataNascimento ? new Date(formData.dataNascimento).toLocaleDateString() : "Selecione a data"}
+          </Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
-            value={formData.dataNascimento}
+            value={formData.dataNascimento ? new Date(formData.dataNascimento) : new Date()}
             mode="date"
             display={Platform.OS === "ios" ? "spinner" : "default"}
             onChange={handleDateChange}
@@ -107,7 +125,6 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
           style={styles.input}
           placeholder="Digite o telefone"
           value={formData.telefone}
-          keyboardType="numeric"
           onChangeText={(text) => handleInputChange("telefone", text)}
         />
       </View>
@@ -118,7 +135,6 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
           style={styles.input}
           placeholder="Digite o CEP"
           value={formData.cep}
-          keyboardType="numeric"
           onChangeText={(text) => handleInputChange("cep", text)}
         />
       </View>
@@ -159,18 +175,7 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
           style={styles.input}
           placeholder="Digite o número da casa"
           value={formData.numeroCasa}
-          keyboardType="numeric"
           onChangeText={(text) => handleInputChange("numeroCasa", text)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Complemento:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o complemento"
-          value={formData.complemento || ""}
-          onChangeText={(text) => handleInputChange("complemento", text)}
         />
       </View>
 
@@ -185,34 +190,12 @@ const UpdateAluno = ({ }: UpdateAlunoProps) => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Telefone do Responsável 01:</Text>
+        <Text style={styles.label}>Telefone Responsável 01:</Text>
         <TextInput
           style={styles.input}
-          placeholder="Digite o telefone"
+          placeholder="Digite o telefone do responsável"
           value={formData.telefoneResponsavel01}
-          keyboardType="numeric"
           onChangeText={(text) => handleInputChange("telefoneResponsavel01", text)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Responsável 02:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o nome do responsável"
-          value={formData.responsavel02}
-          onChangeText={(text) => handleInputChange("responsavel02", text)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Telefone do Responsável 02:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite o telefone"
-          value={formData.telefoneResponsavel02}
-          keyboardType="numeric"
-          onChangeText={(text) => handleInputChange("telefoneResponsavel02", text)}
         />
       </View>
 

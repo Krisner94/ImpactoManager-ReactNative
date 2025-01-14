@@ -56,7 +56,7 @@ export default function App() {
     <PaperProvider theme={light}>
       <NavigationContainer>
         <Drawer.Navigator 
-          initialRouteName="Home" 
+          initialRouteName="Aluno" 
           drawerContent={(props) => <SideBar {...props} />}
           screenOptions={({ navigation }) => ({
             headerLeft: () => (
@@ -81,7 +81,6 @@ export default function App() {
               key={name} 
               name={name} 
               component={component}
-              initialParams={name === 'UpdateAluno' ? { aluno: {} } : undefined} 
             />
           ))}
         </Drawer.Navigator>

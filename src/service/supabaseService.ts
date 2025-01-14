@@ -28,7 +28,12 @@ class SupabaseService {
   }
 
   async update(id: string, data: object) {
-    const { data: updatedItem, error } = await supabase.from(this.tableName).update(data).eq('id', id);
+    const { data: updatedItem, error } = await supabase
+      .from(this.tableName)
+      .update(data)
+      .eq('id', id)
+      .select('*')
+      .single();  
     return { updatedItem, error };
   }
 
