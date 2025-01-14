@@ -50,7 +50,7 @@ const CardComponent = ({ item, onPress, onLongPress, onDeletePress }: CardCompon
               <TitleText>{item.nome}</TitleText>
             </ContentWrapper>
             <IconButton
-              icon="pencil"
+              icon="eye"
               size={20}
               containerColor="#E8E8E8"
               iconColor="#ff9100"

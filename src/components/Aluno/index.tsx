@@ -4,10 +4,7 @@ import CardComponent from '../CardComponent';
 import ModalComponent from '../ModalComponent';
 import FabComponent from "../FAB/FAB";
 import { supabaseInstance } from '../../service/supabaseService';
-
-interface AlunoProps {
-  onDeletePress: (id: string) => void;
-}
+import { useNavigation } from '@react-navigation/native';
 
 interface Aluno {
   id: string;
@@ -28,18 +25,17 @@ interface Aluno {
   telefoneResponsavel02: string;
 }
 
-const Aluno = ({ onDeletePress }: AlunoProps) => {
+const Aluno = () => {
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchAlunos = async () => {
       try {
         const { data, error } = await supabaseInstance.getAll();
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
         setAlunos(data || []);
       } catch (error) {
         console.error('Erro ao buscar alunos:', error);
@@ -59,12 +55,20 @@ const Aluno = ({ onDeletePress }: AlunoProps) => {
     setSelectedAluno(null);
   };
 
+  const handleEditPress = () => {
+    if (selectedAluno) {
+      navigation.navigate('UpdateAluno', { aluno: selectedAluno });
+      setModalVisible(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
-    const { data, error } = await supabaseInstance.delete(id);
-    if (error) {
-      console.error('Erro ao deletar aluno:', error);
-    } else {
+    try {
+      const { error } = await supabaseInstance.delete(id);
+      if (error) throw error;
       setAlunos((prevAlunos) => prevAlunos.filter((aluno) => aluno.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar aluno:', error);
     }
   };
 
@@ -72,7 +76,6 @@ const Aluno = ({ onDeletePress }: AlunoProps) => {
     <CardComponent
       item={item}
       onPress={() => handleCardPress(item)}
-      onLongPress={() => {}}
       onDeletePress={() => handleDelete(item.id)}
     />
   );
@@ -80,7 +83,7 @@ const Aluno = ({ onDeletePress }: AlunoProps) => {
   return (
     <View style={{ flex: 1 }}>
       {alunos.length === 0 ? (
-        <Text>Não há alunos registrados.</Text>
+        <Text>Carregando lista de.</Text>
       ) : (
         <FlatList
           data={alunos}
@@ -93,6 +96,7 @@ const Aluno = ({ onDeletePress }: AlunoProps) => {
           visible={modalVisible}
           onDismiss={handleModalDismiss}
           item={selectedAluno}
+          onEditPress={handleEditPress}
         />
       )}
       <FabComponent nomeDaTela="NovoAluno" />

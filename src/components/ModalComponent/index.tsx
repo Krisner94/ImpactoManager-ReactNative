@@ -9,7 +9,13 @@ interface ModalComponentProps {
   item?: {
     id: string;
     nome: string;
+    idade: number;
+    dataNascimento: string;
+    cpf: string;
+    responsavel01: string;
+    responsavel02: string;
   };
+  onEditPress: () => void;
 }
 
 const ModalContainer = styled(View)`
@@ -34,69 +40,51 @@ const TitleText = styled(Text)`
   margin-bottom: 16px;
 `;
 
-const ButtonContainer = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-
-function ModalComponent({ visible, onDismiss, item }: ModalComponentProps) {
+const ModalComponent = ({ visible, onDismiss, item, onEditPress }: ModalComponentProps) => {
   return (
-    <RNModal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onDismiss}
-    >
+    <RNModal animationType="slide" transparent visible={visible} onRequestClose={onDismiss}>
       <ModalContainer>
         <ModalCard>
-          <IconButton
-            icon="close"
-            size={24}
-            iconColor="#ff9100"
-            onPress={onDismiss}
-            style={{ alignSelf: 'flex-end' }}
-          />
-          <TitleText>Detalhes do aluno {item?.nome}</TitleText>
-          <Text style={styles.description}>
-            Este modal contém informações detalhadas sobre {item?.nome}. 
-          </Text>
-          <ButtonContainer>
-            <Button
-              mode="contained"
-              buttonColor="#ff9100"
-              textColor="#ffffff"
-              onPress={() => console.log("Edit")}
-              style={styles.actionButton}
-            >
-              Edit
+          <IconButton icon="close" size={24} onPress={onDismiss} style={{ alignSelf: 'flex-end' }} />
+          <TitleText>Detalhes do aluno</TitleText>
+          {item && (
+            <>
+              <Text style={styles.detailText}>Nome: {item.nome}</Text>
+              <Text style={styles.detailText}>Idade: {item.idade} anos</Text>
+              <Text style={styles.detailText}>Data de Nascimento: {item.dataNascimento}</Text>
+              <Text style={styles.detailText}>CPF: {item.cpf}</Text>
+              <Text style={styles.detailText}>Responsável 1: {item.responsavel01}</Text>
+              <Text style={styles.detailText}>Responsável 2: {item.responsavel02}</Text>
+            </>
+          )}
+          <View style={styles.buttonContainer}>
+            <Button mode="contained" onPress={onEditPress} style={styles.button}>
+              Editar
             </Button>
-            <Button
-              mode="outlined"
-              textColor="#ff9100"
-              onPress={onDismiss}
-              style={styles.actionButton}
-            >
-              Close
+            <Button mode="outlined" onPress={onDismiss} style={styles.button}>
+              Fechar
             </Button>
-          </ButtonContainer>
+          </View>
         </ModalCard>
       </ModalContainer>
     </RNModal>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  description: {
+  detailText: {
     fontSize: 14,
-    textAlign: 'center',
-    color: '#6e6e6e',
-    marginTop: 8,
+    marginVertical: 4,
+    color: '#333',
   },
-  actionButton: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+  },
+  button: {
     flex: 1,
     marginHorizontal: 8,
-    borderRadius: 8,
   },
 });
 

@@ -1,17 +1,18 @@
 import 'react-native-gesture-handler';
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import Home from "./src/components/Home";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator, DrawerNavigationProp } from "@react-navigation/drawer";
-import Aluno from "./src/components/Aluno";
-import Professor from "./src/components/Professor";
-import Turma from "./src/components/Turma";
-import SideBar from "./src/components/SideBar";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { IconButton } from 'react-native-paper';
-import NovoAluno from "./src/components/Novo/NovoAluno";
-import NovoProfessor from './src/components/Novo/NovoProfessor';
-import NovoTurma from './src/components/Novo/NovoTurma';
-import NovaTurma from './src/components/Novo/NovaTurma';
+
+const Home = require('./src/components/Home').default;
+const Aluno = require('./src/components/Aluno').default;
+const Professor = require('./src/components/Professor').default;
+const Turma = require('./src/components/Turma').default;
+const SideBar = require('./src/components/SideBar').default;
+const NovoAluno = require('./src/components/Novo/NovoAluno').default;
+const NovoProfessor = require('./src/components/Novo/NovoProfessor').default;
+const NovaTurma = require('./src/components/Novo/NovaTurma').default;
+const UpdateAluno = require('./src/components/update/UpdateAluno').default;
 
 type DrawerParamList = {
   Home: undefined
@@ -21,6 +22,7 @@ type DrawerParamList = {
   NovoAluno: undefined
   NovaTurma: undefined
   NovoProfessor: undefined
+  UpdateAluno: { aluno: any }
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -37,6 +39,17 @@ const light = {
     text: '#000'
   }
 };
+
+const screenData = [
+  { name: 'Home', component: Home },
+  { name: 'Aluno', component: Aluno },
+  { name: 'Professor', component: Professor },
+  { name: 'Turma', component: Turma },
+  { name: 'NovoAluno', component: NovoAluno },
+  { name: 'NovoProfessor', component: NovoProfessor },
+  { name: 'NovaTurma', component: NovaTurma },
+  { name: 'UpdateAluno', component: UpdateAluno }
+];
 
 export default function App() {
   return (
@@ -63,19 +76,14 @@ export default function App() {
             },
           })}
         >
-          <Drawer.Screen 
-            name="Home" 
-            component={Aluno}
-            options={{
-              title: "Impacto Manager"
-            }}
-          />
-          <Drawer.Screen name="Aluno" component={Aluno} />
-          <Drawer.Screen name="Professor" component={Professor} />
-          <Drawer.Screen name="Turma" component={Turma} />
-          <Drawer.Screen name="NovoAluno" component={NovoAluno}/>
-          <Drawer.Screen name="NovoProfessor" component={NovoProfessor}/>
-          <Drawer.Screen name="NovaTurma" component={NovaTurma}/>
+          {screenData.map(({ name, component }) => (
+            <Drawer.Screen 
+              key={name} 
+              name={name} 
+              component={component}
+              initialParams={name === 'UpdateAluno' ? { aluno: {} } : undefined} 
+            />
+          ))}
         </Drawer.Navigator>
       </NavigationContainer>
     </PaperProvider>
