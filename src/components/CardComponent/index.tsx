@@ -2,16 +2,13 @@ import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
 import { Card, Text, IconButton } from 'react-native-paper';
 import styled from 'styled-components/native';
+import Aluno from '../Aluno';
 
 interface CardComponentProps {
-  item: {
-    id: string;
-    title: string;
-  };
+  item: Aluno;
   onPress?: () => void;
   onLongPress?: () => void;
   onDeletePress?: () => void;
-  delayLongPress?: number;
 }
 
 const CardContainer = styled(Card)`
@@ -39,34 +36,18 @@ const TitleText = styled(Text)`
   flex: 1;
 `;
 
-
-const CardComponent = ({
-  item,
-  onPress,
-  onLongPress,
-  onDeletePress,
-  delayLongPress,
-}: CardComponentProps) => {
+const CardComponent = ({ item, onPress, onLongPress, onDeletePress }: CardComponentProps) => {
   return (
     <View style={styles.container}>
       <Pressable
         onLongPress={onLongPress}
-        delayLongPress={delayLongPress}
-        style={({ pressed }) => [
-          {
-            opacity: pressed ? 0.7 : 1,
-          },
-        ]}
+        style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
       >
         <CardContainer>
           <CardContentContainer>
             <ContentWrapper>
-              <IconButton
-                icon="account-circle"
-                size={40}
-                iconColor="#ff9100"
-              />
-              <TitleText>{item.title}</TitleText>
+              <IconButton icon="account-circle" size={40} iconColor="#ff9100" />
+              <TitleText>{item.nome}</TitleText>
             </ContentWrapper>
             <IconButton
               icon="pencil"
@@ -80,7 +61,7 @@ const CardComponent = ({
               size={20}
               containerColor="#E8E8E8"
               iconColor="#ff0000"
-              onPress={() => console.log("Deletado")}
+              onPress={onDeletePress}
             />
           </CardContentContainer>
         </CardContainer>

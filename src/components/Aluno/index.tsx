@@ -1,86 +1,94 @@
-import React, {useState} from 'react';
-import {FlatList, Vibration, View} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, View, Text } from 'react-native';
 import CardComponent from '../CardComponent';
 import ModalComponent from '../ModalComponent';
 import FabComponent from "../FAB/FAB";
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-
-interface CardItem {
-    id: string;
-    title: string;
-}
-
-const DATA: CardItem[] = [
-    {id: '1', title: 'Aline'},
-    {id: '2', title: 'João'},
-    {id: '3', title: 'Maria'},
-    {id: '4', title: 'Pedro'},
-    {id: '5', title: 'Ana'},
-    {id: '6', title: 'Lucas'},
-    {id: '7', title: 'Clara'},
-    {id: '8', title: 'Gabriel'},
-    {id: '9', title: 'Laura'},
-    {id: '10', title: 'Mateus'},
-    {id: '11', title: 'Julia'},
-    {id: '12', title: 'Sophia'},
-    {id: '13', title: 'Rafael'},
-    {id: '14', title: 'Mariana'},
-    {id: '15', title: 'Tiago'},
-    {id: '16', title: 'Luana'},
-    {id: '17', title: 'Vinícius'},
-    {id: '18', title: 'Isabela'},
-    {id: '19', title: 'Felipe'},
-    {id: '20', title: 'Beatriz'}
-];
+import { supabaseInstance } from '../../service/supabaseService';
 
 interface AlunoProps {
-    onDeletePress: () => void;
+  onDeletePress: () => void;
+}
+
+interface Aluno {
+  id: string;
+  nome: string;
+  cpf: string;
+  sexo: string;
+  dataNascimento: string;
+  telefone: string;
+  cep: string;
+  rua: string;
+  bairro: string | null;
+  cidade: string;
+  numeroCasa: string;
+  complemento: string | null;
+  responsavel01: string;
+  telefoneResponsavel01: string;
+  responsavel02: string;
+  telefoneResponsavel02: string;
 }
 
 const Aluno = ({ onDeletePress }: AlunoProps) => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<CardItem | null>(null);
+  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null);
 
-    const openModal = (item: CardItem) => {
-        setSelectedItem(item);
-        setModalVisible(true);
+  useEffect(() => {
+    const fetchAlunos = async () => {
+      try {
+        const { data, error } = await supabaseInstance.getAll();
+        if (error) {
+          throw error;
+        }
+        setAlunos(data || []);
+      } catch (error) {
+        console.error('Erro ao buscar alunos:', error);
+      }
     };
 
-    const closeModal = () => {
-        setModalVisible(false);
-        setSelectedItem(null);
-    };
+    fetchAlunos();
+  }, []);
 
-    const handleLongPress = (item: CardItem) => {
-        Vibration.vibrate(100); // Vibração de 100ms
-        openModal(item);
-    };
+  const handleCardPress = (aluno: Aluno) => {
+    setSelectedAluno(aluno);
+    setModalVisible(true);
+  };
 
-    const renderItem = ({ item }: { item: CardItem }) => (
-        <CardComponent
-            item={item}
-            onPress={() => openModal(item)}
-            onLongPress={() => handleLongPress(item)}
-            delayLongPress={300}
-            onDeletePress={onDeletePress}
+  const handleModalDismiss = () => {
+    setModalVisible(false);
+    setSelectedAluno(null);
+  };
+
+  const renderItem = ({ item }: { item: Aluno }) => (
+    <CardComponent
+      item={item}
+      onPress={() => handleCardPress(item)}
+      onLongPress={() => {}}
+      onDeletePress={onDeletePress}
+    />
+  );
+
+  return (
+    <View style={{ flex: 1 }}>
+      {alunos.length === 0 ? (
+        <Text>Não há alunos registrados.</Text>
+      ) : (
+        <FlatList
+          data={alunos}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
         />
-    );
-
-    return (
-        <View style={{ flex: 1 }}>
-            <FlatList
-                data={DATA}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-            />
-            <ModalComponent
-                visible={modalVisible}
-                onDismiss={closeModal}
-                item={selectedItem || undefined}
-            />
-            <FabComponent nomeDaTela='NovoAluno'/>
-        </View>
-    );
+      )}
+      {selectedAluno && (
+        <ModalComponent
+          visible={modalVisible}
+          onDismiss={handleModalDismiss}
+          item={selectedAluno}
+        />
+      )}
+      <FabComponent nomeDaTela="NovoAluno" />
+    </View>
+  );
 };
 
 export default Aluno;
