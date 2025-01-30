@@ -39,22 +39,6 @@ const SideBar = (props: SideBarProps) => {
             props.navigation.navigate('Aluno');
           }}
         />
-        <Drawer.Item
-          label="Professores"
-          active={active === 'professor'}
-          onPress={() => {
-            setActive('professor');
-            props.navigation.navigate('Professor');
-          }}
-        />
-        <Drawer.Item
-          label="Turmas"
-          active={active === 'turma'}
-          onPress={() => {
-            setActive('turma');
-            props.navigation.navigate('Turma');
-          }}
-        />
       </Drawer.Section>
     </ScrollView>
   );

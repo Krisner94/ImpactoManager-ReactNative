@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
 import { Card, Text, IconButton } from 'react-native-paper';
 import styled from 'styled-components/native';
-import { Aluno } from '../Aluno';
+import Aluno from '../Aluno';
 
 interface CardComponentProps {
   item: Aluno;

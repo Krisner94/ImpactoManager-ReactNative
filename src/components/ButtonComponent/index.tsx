@@ -10,7 +10,7 @@ interface ButtonComponentProps {
 function ButtonComponent({ title, onPress }: ButtonComponentProps) {
   return (
     <View style={styles.container}>
-      <ButtonStyled mode="contained" onPress={onPress}>
+      <ButtonStyled mode="contained" onPress={onPress} style={styles.button}>
         {title}
       </ButtonStyled>
     </View>
@@ -19,10 +19,12 @@ function ButtonComponent({ title, onPress }: ButtonComponentProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    marginVertical: 10,
   },
   button: {
-    flex: 1,
+    width: '100%',
   },
 });
 

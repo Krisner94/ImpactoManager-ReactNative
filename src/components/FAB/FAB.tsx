@@ -5,8 +5,8 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 interface Props {
     nomeDaTela: string;
-    backgroundColor?: string; // Adicionado para customizar a cor de fundo
-    iconColor?: string;       // Adicionado para customizar a cor do ícone
+    backgroundColor?: string; 
+    iconColor?: string;
 }
 
 type RootStackParamList = {
